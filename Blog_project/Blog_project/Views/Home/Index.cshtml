@@ -1,0 +1,102 @@
+﻿
+
+@model Blog_project.ViewModels.ViewModel
+@{
+
+    string create = Url.Action("Create", "Post");
+    var session = HttpContextAccessor.HttpContext.Session;
+    var currentUser = session.GetString("CurrentUser");
+
+    User?user = null;
+    if (!string.IsNullOrEmpty(currentUser))
+    {
+        user = JsonConvert.DeserializeObject<User>(currentUser);
+
+    }
+        ViewData["Title"] = "Home Page";
+        IEnumerable<Post> posts = Model.Posts.ToList();
+        IEnumerable<User> users = Model.Users.ToList();
+        IEnumerable<Coment> coments = Model.Coments.ToList();
+    
+}
+@foreach(Post post in posts){
+<div class="col-md-6">
+    <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+        <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-primary">
+                @foreach(var userPost in users)
+                {
+                    
+                    {
+                        if (userPost.Id == post.UserId)
+                        {
+                            @userPost.Name
+                        }
+                    }
+                }
+            </strong>
+            <h3 class="mb-0">
+                @foreach (var userPost in users)
+                {
+                    {
+                        if (userPost.Id == post.UserId)
+                        {
+                            @post.PostTitle
+                        }
+                    }
+                }
+            </h3>
+            <div class="mb-1 text-body-secondary">@DateTime.Now.Date.ToString()</div>
+            <p class="card-text mb-auto">
+                @foreach (var userPost in users)
+                {
+                    {
+                        if (userPost.Id == post.UserId)
+                        {
+                            @post.PostBody
+                        }
+                    }
+                }
+            </p>
+                   
+                <form method="post" action="ReadMore">
+                    <input type="hidden" name="id" value="@post.Id" />
+                    <a href="https://localhost:7027/Home/ReadMore/@post.Id" class="stretched-link">Continue reading</a>
+                </form>
+                   
+            
+        </div>
+               
+    </div>
+    
+        
+            
+</div>
+   
+}
+
+@if (user != null)
+{
+    <form method="post" action="index">
+
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <h3 class="mb-0">New Post</h3>
+                    <div class="mb-1 text-muted">May 2023</div>
+
+
+                    <div class="mb-3">
+                        <label for="post-title" class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" id="post-title" placeholder="Enter post title">
+                    </div>
+                    <div class="mb-3">
+                        <label for="post-content" class="form-label">Content</label>
+                        <textarea class="form-control" name="postBody" id="post-content" rows="5" placeholder="Enter post content"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Post</button>
+                </div>
+            </div>
+        </div>
+    </form>
+}

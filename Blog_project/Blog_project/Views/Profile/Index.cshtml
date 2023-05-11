@@ -1,0 +1,22 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+    var currentUser = session.GetString("CurrentUser");
+
+    User? user = null;
+    if (!string.IsNullOrEmpty(currentUser))
+    {
+        user = JsonConvert.DeserializeObject<User>(currentUser);
+    }
+    Layout = "_Layout_Profile";
+}
+@if(user!=null){
+<h1>Name : @user.Name</h1>
+<h2>Email : @user.Email</h2>
+<h3>Password : @user.Password</h3>
+}
+else{
+    <h1>You have to login !</h1>
+}
